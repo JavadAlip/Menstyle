@@ -1,0 +1,119 @@
+<section style="background-color: #eee;">
+  <div class="container py-5">
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+
+            <li class="breadcrumb-item active text-dark" aria-current="page">USER PROFILE</li>
+
+          </ol>
+          <a href="/"><button type="button" class="btn btn-danger">HOME PAGE ?</button></a>
+             <a href="/userSideOrder"><button type="button" class="btn btn-danger">ORDERS</button></a>
+              <a href="/wishList"><button type="button" class="btn btn-danger">WISHLIST</button></a>
+
+
+        </nav>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          {{#each pass}}
+          <div class="card-body text-center">
+            <img src="/images/user (1).png" alt="avatar"
+              class="rounded-circle img-fluid" style="width: 150px;">
+
+            <h5 class="my-3">{{Username}}</h5>
+            <p class="text-muted mb-1">{{Mobilenumber}}</p>
+            <p class="text-muted mb-4">{{Email}}</p>
+            <div class="d-flex justify-content-center mb-2">
+              <a href="changePassword"> <button type="button" class="btn btn-primary">CHANGE PASSWORD</button></a>
+            </div>
+            <div>
+              <a href="/editUserprofile/{{_id}}" type="button" class="btn btn-primary">PROFILE
+                  EDIT</a>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+        <div class="card mb-4 mb-lg-0">
+
+        </div>
+      </div>
+      
+
+
+
+      <div class="col-lg-8">
+        <div class="card mb-4">
+       <form action="/userAddress" method="post" name="submission" onsubmit="return userAddress()" oninput="clearform()">
+          <div class="card-body mt-3">
+            <div >
+              <p>ADDRESS DETAILS</p>
+            </div>
+
+            <div class="row ">
+              <div class="col-md-6 form-group mb-3">
+               {{!-- <label>Last Name</label> --}}             
+                <input class="form-control" type="text" name="Firstname" placeholder="First Name">
+              </div>
+
+           
+              <div class="col-md-6 form-group">
+                {{!-- <label>Last Name</label> --}}
+                <input class="form-control" type="text" name="Lastname" placeholder="Last Name">
+              </div>
+
+  
+              <div class="col-md-6 form-group  mb-3">
+                {{!-- <label>E-mail</label> --}}
+                <input class="form-control" type="text" name="Email" placeholder="E-mail">
+               </div>
+
+              <div class="col-md-6 form-group">
+                {{!-- <label>Mobile No</label> --}}
+                <input class="form-control" type="text" name="Mobilenumber" placeholder="Mobile No">
+              </div>
+             
+            
+
+              <div class="col-md-6 form-group  mb-3">
+                {{!-- <label>Address Line 1</label> --}}
+                <input class="form-control" type="text" name="Address" placeholder="Address">
+              </div>
+          
+
+          
+              <div class="col-md-6 form-group">
+                {{!-- <label>ZIP Code</label> --}}
+                <input class="form-control" type="text" name="Postcode" placeholder="Post Code">
+              </div>
+
+             <div class="col-md-6 form-group">
+                {{!-- <label>City</label> --}}
+                <input class="form-control" type="text" name="State" placeholder="State">
+              </div>
+
+                 <div class="col-md-6 form-group">
+                {{!-- <label>City</label> --}}
+                <input class="form-control" type="text" name="City" placeholder="City">
+              </div>
+
+              <div class="col-md-6 form-group  mb-3">
+               <button type="submit" class="btn btn-primary">UPDATE ADDRESS</button>
+              </div>
+
+            </div>
+
+          </div>
+          </div>
+        </form>
+     
+      </div>
+      
+    </div>
+  </div>
+</section>
+<script src="/javascripts/userAddress.js"></script>

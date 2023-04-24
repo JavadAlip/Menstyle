@@ -1,0 +1,70 @@
+{{!--
+
+<table id="table_id" class="display">
+  <a href="/product/addproduct"><button type="button" class="btn btn-dark">ADD PRODUCT</button></a>
+  <a href="adminhome" class="btn btn-secondary" role="button">DASH BOARD</a>
+  <thead>
+        <tr>
+            <th>Product Image</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Brand</th>
+            <th>Stock</th>
+            <th>Discription</th>
+            <th>Options</th>
+        </tr>
+  </thead>
+      
+    <tbody>
+      {{#each table}}
+        <tr>
+          
+ 
+            <td><img style="width: 80px; height: 80px;" src="/productimages/{{Productimage}}" alt=""></td>
+            <td>{{productname}}</td>
+            <td>{{price}}</td>
+            <td>{{brand}}</td>
+            <td>{{stock}}</td>
+            <td>{{discription}}</td>
+           
+        <td><a href="/product/edit/{{_id}}" ><button  type="button"  class="btn btn-primary">EDIT</button></a>
+
+        <a href="/deleteproduct/{{_id}}" ><button  type="button"  class="btn btn-danger"
+        onclick="return confirm ('you want to delete {{productname}}?')">DELETE</button></a></td>
+        </tr>
+        {{/each}}       
+    </tbody>
+</table>
+
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+} );
+</script>
+
+<style>
+  body{
+    padding: 3%;
+  }
+</style> --}}
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

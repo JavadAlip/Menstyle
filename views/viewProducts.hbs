@@ -1,0 +1,53 @@
+<table id="table_id" class="display">
+
+  <a href="/userSideOrder" class="btn btn-dark" role="button">USER ORDER</a>
+  <thead>
+    <tr>
+      <th>Product Image</th>
+      <th>Product Name</th>
+      <th>Brand</th>
+      <th>Price</th>
+
+
+
+    </tr>
+  </thead>
+
+
+
+
+
+
+
+  
+  <tbody>
+
+    {{#each productCart}}
+    <tr>
+
+
+      <td><img style="width: 50px; height: 50px;" src="/productimages/{{Product.Productimage.[0]}}" alt=""></td>
+      <td>{{Product.productname}}</td>
+      <td>{{Product.brand}}</td>
+      <td>{{Product.price}}</td>
+      
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>
+
+
+
+
+<script>
+  $(document).ready(function () {
+    $('#table_id').DataTable();
+  });
+</script>
+
+<style>
+  body {
+    padding: 3%;
+  }
+</style>

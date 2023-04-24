@@ -1,0 +1,1176 @@
+const orderPage=async function(req,res){
+ let orderdetails=await order.find()
+  res.render('adminOrder',{orderdetails})
+}
+
+
+
+const orderdProducts=async function(req,res){
+  let orderid=req.params.id
+  let orderstatus=await order.findOne({_id:new ObjectId(orderid)})
+
+  res.render('orderproduct',{ordetprodata,orderstatus,orderid})
+
+
+
+const getOtpLogin=async(req,res)=>{
+  try {
+    var user=req.session.user
+    if(user){
+      res.redirect('/')
+    }else{
+    otp=req.session.otp
+    data=req.session.otpData
+    err=req.session.otpErr
+    invalid=req.session.InvalidOtp
+    res.render('otplogin',{otp,data,err,invalid})
+    req.session.otpErr=null
+    req.session.InvalidOtp = null
+    }
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <!-- Required meta tags-->
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Colorlib Templates">
+        <meta name="author" content="Colorlib">
+        <meta name="keywords" content="Colorlib Templates">
+        <!-- Title Page-->
+
+        <title>OTP login</title>
+        <!-- Icons font CSS-->
+        <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+        <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+        <!-- Font special for pages-->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+        <!-- Vendor CSS-->
+        <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+        <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+        <!-- Main CSS-->
+        <link href="css/main.css" rel="stylesheet" media="all">
+    </head>
+    <body>
+        <div class="page-wrapper bg-red p-t-180 p-b-100 font-robo">
+            <div class="wrapper wrapper--w960">
+                <div class="card card-2">
+                    <div class="card-heading"></div>
+
+
+
+                    <div class="card-body">
+                        <form method="POST" action="/otplogin">
+                        <p class=" text text-danger"></p>
+                            <div class="input-group d-flex align-items-center">
+                                <input class="input--style-2" type="email" placeholder="Enter Your Email"   name="email">
+                            </div>
+                            <div class="p-t-30">
+                             <a href="/"> <button class="btn btn--radius btn--green" type="submit" value="login">Send OTP</button><br><br></a>
+                            </div>
+                        </form>
+                        
+                        <form action="/verifyotp" method="post">
+                            <div class="input-group">
+                                <input class="input--style-2" type="text" placeholder="Type Your 6 Digit OTP"   name="digit">
+                            </div>
+
+                    <div>
+
+                       <p style="color: red;">{{invalid}}{{err}}</p> 
+                    </div>
+                            <div class="p-t-30">
+                             <a href="/"> <button class="btn btn--radius btn--green" type="submit" value="login">Verify OTP</button><br><br></a>
+                            </div>
+
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+        <!-- Jquery JS-->
+        <script src="vendor/jquery/jquery.min.js"></script>
+        <!-- Vendor JS-->
+        <script src="vendor/select2/select2.min.js"></script>
+        <script src="vendor/datepicker/moment.min.js"></script>
+        <script src="vendor/datepicker/daterangepicker.js"></script>
+        <!-- Main JS-->
+        <script src="js/global.js"></script>
+    </body>
+    </html>
+    <!-- end document-->
+
+
+
+    const otpVerification=async(req,res)=>{
+  try {
+    let data = req.body;
+    let response={}
+        let checkuser = await user.findOne({email:data.email})
+        if(checkuser){
+          if(checkuser.status) {
+            otpEmail = checkuser.email
+            response.otp = OTP()
+            let otp = response.otp
+            let mailTransporter = nodemailer.createTransport({
+                service : "gmail",
+                auth : {
+                    user:'uchoice1919@gmail.com',
+                    pass:'xlufgprbvcqjvtun'
+                }
+            })
+            let details = {
+                from:'uchoice1919@gmail.com',
+                to:'sinshasb@gmail.com',
+                subject:"UCHOICE",
+                text: otp+" is your UCHOICE verification code. Do not share OTP with anyone "
+            }
+            mailTransporter.sendMail(details,(err)=>{
+                if(err){
+                    console.log(err);
+                }else{
+                    console.log("OTP Send Successfully ");
+                }
+            })
+
+            function OTP(){
+                OTP = Math.random()*1000000
+                OTP = Math.floor(OTP)
+                return OTP
+            }
+            response.user = checkuser
+            response.status = true
+            if(response.status){
+              req.session.otp=response.otp;
+              req.session.otpData=req.body;
+              req.session.otpUser=response.user;
+              res.redirect('/otplogin')
+            }
+          }
+          else{
+            req.session.otpErr="Entered email is blocked!";
+            res.redirect('/otplogin');
+            req.session.otpErr = null;
+          }
+        }
+        else{
+          req.session.otpErr="Email not registered!";
+          res.redirect('/otplogin');
+          req.session.otpErr = null;
+        }
+  } catch (error) {
+    console.log(error.message);
+  }
+
+}
+
+
+const perpage=6
+const shopProducts=await productinfo.find().skip((pageNum-1)*perpage).limit(perpage)
+
+
+
+  {{!-- serch code ------ --}}
+
+  
+  <script>
+        function sendData(e) {
+            const searchResults = document.getElementById('searchProduct')
+            fetch('searchMethod', {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payload: e.value })
+            }).then(res => res.json()).then(data => {
+                let payload = data.payload;
+                console.log(payload)
+               searchProduct.innerHTML = '';
+                if (payload.length < 1) {
+                    searchProduct.innerHTML = '<br><br><p class="text-center" >Sorry .Nothing Found</p>'
+                    return;
+                }
+                payload.forEach((item, index) => {
+                 if (index > 0) searchProduct.innerHTML += '<br><br>';
+                    searchProduct.innerHTML += `<div style="height: 17rem; width: 19rem; "   class="row"><div  style="height: 17rem; width: 19rem; " " class="searchDiv"  style="display: flex; align-items: center;"  onclick="window.location.href='/productAccsess/${item._id}'"><img  style=" height: 17rem; width: 15rem; " src='/productimages/${item.image[0]}' width='150rem'></div><div " class="img src"><p>${item.productName}</p> </div><div  class="img src"><p>₹${item.price}</p></div><div  class="imgsrc"><p>${item.brand}</p></div></div>`
+                })
+                return;
+            })
+            searchProduct.innerHTML = '';
+        }
+    </script>
+    <script>
+  $(document).ready(function() {
+  $("#searchBtn").click(function() {
+  if ($("#searchBar").is(":visible")) {
+        $("#searchBar").hide();
+        
+      }else{
+       
+
+    $("#searchBar").show();
+      }
+  });
+
+ 
+});
+</script>
+
+
+{{!-- coupen hbs------------------------------------------------- --}}
+
+
+<h3>Add New Coupen</h3>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form onsubmit="return couponvalidate()" action="/coupeninsert"  name="submission" oninput="couponclearmsg()"  role="form" method="post">
+                                        
+
+                            <div class="form-group">
+                                <div class="row">
+
+                                    {{!-- <label for="">:</label> --}}
+                                    <input style="width: 30rem;" type="tel" class="form-control" name="coupencode"
+                                        id="coupencode" placeholder="Enter Coupen code">
+                                    <div class="invalid-feedback">copen code Can't Be Empty</div>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+                                    
+                                    <input style="width: 30rem;" type="tel" class="form-control "
+                                        name="discountvalue" id="discountvalue" placeholder="Enter Discount Value">
+                                    <div class="invalid-feedback">Main Title 2 Can't Be Empty</div>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+
+                                    <p>create date</p>
+                                    <input style="width: 30rem;" type="date" class="form-control " name="createdate"
+                                        id="createdate" placeholder="Enter Create Date">
+                                    <div class="invalid-feedback">Main Title 2 Can't Be Empty</div>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+
+                                    <input style="width: 30rem;" type="number" class="form-control "
+                                        name="minpurchese" id="minpurchese" placeholder="Enter Min Purchese">
+                                    <div class="invalid-feedback">Main Title 2 Can't Be Empty</div>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+
+                                    <p>expire date</p>
+                                    <input style="width: 30rem;" type="date" class="form-control " name="expiredate"
+                                        id="expiredate" placeholder="Enter Expire Date">
+                                    <div class="invalid-feedback">Main Title 2 Can't Be Empty</div>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+
+                                    <select style="width: 30rem;height: 2.5rem;" class="form-select "
+                                        name="discounttype" aria-label="Default select example">
+                                        <option select>Discount Type</option>
+                                        <option >flat</option>
+                                         <option >percentage</option>
+                                    </select>
+                                 
+                                     {{!-- <input style="width: 30rem;" type="number" class="form-control mt-3"
+                                        name="maxamount" id="maxamount" placeholder="Enter Max Amount">
+                                    <div class="invalid-feedback">Main Title 2 Can't Be Empty</div>
+                                 --}}
+                                </div>
+                            </div>
+                            <button style="position: relative;right:30%" class="btn btn-dark mt-3 mx-auto d-block"
+                                type="submit"> Submit</button>
+                                      <p style="font-weight:600;  font-size:15px" id="error-message" class="text-danger"></p>
+                            {{!-- <p style="color: red;">{{categoryerror}}</p> --}}
+                        </form>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="datatable" class="table data-table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Index</th>
+                                            <th>Coupen Code</th>
+                                            <th>Discount Type</th>
+                                            <th>discount</th>
+                                            {{!-- <th>Max Amount</th> --}}
+                                            <th>Min Purchese</th>
+                                            <th>Create Date</th>
+                                            <th>Expire Date</th>
+                                            <th>status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {{#each coupendetail}}
+                                        <tr>
+                                            <td>{{@index}}</td>
+                                            <td>{{coupencode}}</td>
+                                            <td>{{discounttype}}</td>
+                                            <th>{{discountvalue}}</th>
+                                            {{!-- <th>{{maxamount}}</th> --}}
+                                            <td>{{minpurchese}}</td>
+                                            <td>{{createdate}}</td>
+                                            <td>{{expiredate}}</td>
+                                            <td>{{#if status}}
+                                                On
+                                            <td><a href="/coupenremove/{{_id}}" style="width: 5rem;"
+                                                    class="btn btn-primary">Disable</a></td>
+                                            {{else}}
+                                            Disable
+                                            <td> <a href="/coupenenable/{{_id}}" style="width: 5rem;"
+                                                    class="btn btn-dark">Enable</a></td>
+                                            {{/if}}
+                                        </tr>
+                                        {{/each}}
+                                </table>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        
+    </div>
+
+
+    {{!-- coupen get method----------------------------------------------------- --}}
+
+    const UserTryCoupen = async function (req, res, next) {
+  try {
+    const coupenId = req.body.coupencode
+  
+  let usedcoupecheck = await userdata.findOne({ username: req.session.user, usedcoupen: { $in: [coupenId] } })
+
+  if (usedcoupecheck == null) {
+    let coupencheck = await admincoupendata.findOne({ coupencode: coupenId })
+    
+    if (coupencheck) {
+      const date = new Date().toLocaleString()
+     
+      if (date > coupencheck.expiredate && coupencheck.status == true) {
+       
+        req.session.coupen = coupenId
+      } else {
+        
+        coupenerr = "Invalid  Coupencode"
+      }
+    } else {
+      coupenerr = "Invalid Coupencode"
+    }
+  } else { coupenerr = "This Coupen Is Already Used" }
+  res.redirect('/user-shopcart')
+  } catch (error) {
+    console.log(error);
+    next()
+  }
+  
+}
+
+
+
+
+
+{{!-- 
+-------------------------------------------------- --}}
+
+coupensid = req.session.coupen
+  if (coupensid) {
+    console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+    console.log(coupensid);
+    let val = await admincoupendata.find({ coupencode: coupensid })
+    min = val[0].minpurchese
+    if (grandtotal < val[0].minpurchese) {
+      coupenerr = "Pleace Buy Upto " + min
+    } else {
+      console.log(val);
+      dis=val[0].discountvalue
+      console.log(val[0].discountvalue);
+      grandtotal -= val[0].discountvalue
+      console.log(grandtotal);
+      console.log(dis);
+       
+      var success = "Successfully Discounted ₹"+dis
+      // coupensid=req.session.coupen
+   await userdata.updateOne({ username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+    }
+  }
+  // await userdata.updateOne({ username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+  res.render('user-shopcart', { success,cartAllProducts,fullname, grandtotal, subgrandtotal, coupenerr, carterr })
+  coupenerr = null;
+  req.session.coupen = null
+  carterr = null
+  success=null
+  } catch (error) {
+    console.log(error);
+    next()
+  }
+  
+}
+
+
+
+const UserTryCoupen = async function (req, res, next) {
+  try {
+    const coupenId = req.body.coupenCode
+    console.log(coupenId);
+  
+    let usedcoupencheck = await userinfo.findOne({ Username : req.session.user, usedcoupen: { $in: [coupenId] } })
+
+    if (usedcoupencheck == null) {
+      let coupencheck = await coupeninfo.findOne({ coupenCode: coupenId })
+
+      if (coupencheck) {
+        const date = new Date().toLocaleString()
+
+        if (date > coupencheck.expireDate && coupencheck.status == true) {
+          req.session.coupen = coupenId
+        } else {
+          coupenerr = "Invalid Coupencode"
+        }
+      } else {
+        coupenerr = "Invalid Coupencode"
+      }
+    } else {
+      coupenerr = "This Coupon Is Already Used"
+    }
+    
+    res.redirect('/addCart')
+  } catch (error) {
+    console.log(error);
+    next()
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const usercart = async function (req, res, next) {
+  User = req.session.user
+  if (User) {
+    productCart = await cartinfo.aggregate([{
+      $match: { User: user }
+    },
+    { $unwind: '$Product' },
+    { $project: { item: "$Product.item", quantity: "$Product.quantity" } },
+    {
+      $lookup: {
+        from: 'productdatas',
+        localField: 'item',
+        foreignField: '_id',
+        as: 'products'
+      }
+
+    },
+
+    { $project: { item: 1, quantity: 1, Product: { $arrayElemAt: ['$products', 0] } } }
+    ])
+
+    console.log(productCart);
+
+    for (var i = 0; i < productCart.length; i++) {
+      totalPrice = productCart[i].quantity * productCart[i].Product.price
+      productCart[i].totalPrice = totalPrice
+    }
+
+    grand_total = 0
+    for (i = 0; i < productCart.length; i++) {
+      grand_total += productCart[i].totalPrice
+    }
+
+    coupensid = req.session.coupen
+    if (coupensid) {
+      // console.log("zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz");
+      console.log(coupensid);
+      let val = await coupeninfo.find({ coupenCode: coupensid })
+      min =val[0].minimumPrice
+      if (grandTotal < val[0].minimumPrice) {
+        coupenerr = "Please Buy Upto " + min
+      } else {
+        console.log(val);
+        dis=val[0].discountPrice
+        console.log(val[0].discountPrice);
+        grandTotal -= val[0].discountPrice
+        console.log(grandTotal);
+        console.log(dis);
+         
+        var success = "Successfully Discounted ₹"+dis
+        // coupensid=req.session.coupen
+     await userinfo.updateOne({ Username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+      }
+    }
+    // await userdata.updateOne({ username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+    res.render('addCart', { success, grandTotal, coupenerr, carterr })
+    coupenerr = null;
+    req.session.coupen = null
+    carterr = null
+    success=null
+  }
+  
+  else {
+    res.redirect('/login')
+  }
+
+} 
+
+
+
+
+
+
+
+
+
+
+const usercart = async function (req, res, next) {
+  User = req.session.user
+  if (User) {
+    productCart = await cartinfo.aggregate([{
+      $match: { User: user }
+    },
+    { $unwind: '$Product' },
+    { $project: { item: "$Product.item", quantity: "$Product.quantity" } },
+    {
+      $lookup: {
+        from: 'productdatas',
+        localField: 'item',
+        foreignField: '_id',
+        as: 'products'
+      }
+
+    },
+    
+
+    { $project: { item: 1, quantity: 1, Product: { $arrayElemAt: ['$products', 0] } } }
+    ])
+
+    console.log(productCart);
+
+    for (var i = 0; i < productCart.length; i++) {
+      totalPrice = productCart[i].quantity * productCart[i].Product.price
+      productCart[i].totalPrice = totalPrice
+    }
+
+    grand_total = 0;
+    for (i = 0; i < productCart.length; i++) {
+      grand_total += productCart[i].totalPrice
+    }
+    console.log(grand_total);
+
+
+
+    let coupensid = req.session.coupen
+    if (coupensid) {
+   
+      console.log(coupensid);
+      let val = await coupeninfo.find({ coupenCode: coupensid })
+      min =val[0].minimumPrice
+      if (grand_total < val[0].minimumPrice) {
+        coupenerr = "Please Buy Upto " + min
+      } else {
+        console.log(val);
+        dis=val[0].discountPrice
+        console.log(val[0].discountPrice);
+        grand_total -= val[0].discountPrice
+        console.log(grand_total);
+        console.log(dis);
+         
+        var success = "Successfully Discounted ₹"+dis
+        // coupensid=req.session.coupen
+     await userinfo.updateOne({ Username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+      }
+    }
+    // await userdata.updateOne({ username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+    res.render('addCart', { success, coupenerr, carterr,productCart,grand_total })
+    coupenerr = null;
+    req.session.coupen = null
+    carterr = null
+    success=null
+  }
+  else {
+    res.redirect('/login')
+  }
+
+} 
+
+
+
+
+
+
+
+
+
+
+
+const UserTryCoupen = async function (req, res, next) {
+  try {
+    const coupenId = req.body.coupenCode
+    console.log(coupenId);
+  
+    let usedcoupencheck = await userinfo.findOne({ Username : req.session.user, usedcoupen: { $in: [coupenId] } })
+
+    if (usedcoupencheck == null) {
+      let coupencheck = await coupeninfo.findOne({ coupenCode: coupenId })
+
+      if (coupencheck) {
+        const date = new Date().toLocaleString()
+
+        if (date > coupencheck.expireDate && coupencheck.status == true) {
+          req.session.coupen = coupenId
+        } else {
+          coupenerr = "Invalid Coupencode"
+        }
+      } else {
+        coupenerr = "Invalid Coupencode"
+      }
+    } else {
+      coupenerr = "This Coupon Is Already Used"
+    }
+    
+    res.redirect('/addCart')
+  } catch (error) {
+    console.log(error);
+    next()
+  }
+}
+
+
+
+
+
+
+
+
+
+if (req.session.user) {
+  let coupensid = req.session.coupen
+
+  if (coupensid) {
+    console.log(coupensid);
+    let val = await coupeninfo.find({ coupenCode: coupensid })
+    min =val[0].minimumPrice
+
+    if (grand_total < val[0].minimumPrice) {
+      coupenerr = "Please Buy Up to " + min
+    } else {
+      console.log(val);
+      dis=val[0].discountPrice
+      console.log(val[0].discountPrice);
+      grand_total -= val[0].discountPrice
+      console.log(grand_total);
+      console.log(dis);
+
+      var success = "Successfully Discounted ₹" + dis
+
+      // Update the user's used coupons list
+      await userinfo.updateOne({ Username: req.session.user }, { $addToSet: { usedcoupen: coupensid } })
+    }
+  }
+
+  // Render the addCart page with the appropriate variables
+  res.render('addCart', { success, coupenerr, carterr, productCart, grand_total })
+
+  // Reset the error and success messages and the coupon code in the session
+  coupenerr = null
+  req.session.coupen = null
+  carterr = null
+  success = null
+} else {
+  res.redirect('/login')
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   {{#each addresspass }}
+<div class="row  col-md-6  d-flex ">
+
+
+
+<div class="form control d-flex justify-content-center align-items-center flex-column">
+  <h1>Adderss Details</h1>
+  <div style="width: 30rem; height: 50rem;">
+
+
+    <form  method="post"  name="submission" oninput="clearform()">
+        
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Firstname" name="Firstname" placeholder="product name"  value="{{Firstname}}">
+        <label for="floatingInput">{{Firstname}}</label>
+      </div>
+       <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Lastname" name="Lastname" placeholder="brand"  value="{{Lastname}}">
+        <label for="floatingInput">{{Lastname}}</label>
+      </div>
+       <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Email" name="Email" placeholder="price" value="{{Email}}">
+        <label for="floatingInput">{{Email}}</label>
+      </div>
+       <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Mobilnumber" name="Mobilenumber" placeholder="stock"  value="{{Mobilenumber}}">
+        <label for="floatingInput">{{Mobilenumber}}</label>
+      </div>
+       <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Address" name="Address" placeholder="Description" value="{{Address}}">
+        <label for="floatingPassword">{{Adderss}}</label>
+      </div>
+       <p class="text-danger  text-center"></p>
+
+        <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="Postcode" name="Postcode" placeholder="Description" value="{{Postcode}}">
+        <label for="floatingPassword">{{Postcode}}</label>
+      </div>
+
+       <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="State" name="state" placeholder="Description" value="{{State}}">
+        <label for="floatingPassword">{{State}}</label>
+      </div>
+
+       <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="City" name="City" placeholder="Description" value="{{City}}">
+        <label for="floatingPassword">{{City}}</label>
+      </div>
+
+  
+
+      <div class="pt-5 mb-4 ">
+       <a href="/savedAddress/{{@index}}"  class="btn btn-dark btn-lg btn-block" type="submit">SELECT</a>
+      </div>
+      
+    </form>
+ 
+  </div>
+</div>
+
+</div>
+   {{/each}}
+
+
+
+
+
+
+
+
+
+
+   const userPostUpdateQuantity = async function (req, res, next) {
+  try {
+    user = req.session.user
+    cartitems = req.body
+    
+    cartitems.count = parseInt(cartitems.count)
+    let cartData = await usercartdata.findOneAndUpdate({ $and: [{ user: user }, { 'products.items': cartitems.product }] },
+      { $inc: { 'products.$.quantity': cartitems.count } })
+    let products = cartData.products
+    let productObjs = []
+
+    for (i = 0; i < products.length; i++) {
+      let product = products[i]
+      let dbProduct = await adminAddProduct.findOne({ productid: product.items })
+      let quantity  
+      if (product.items == cartitems.product) {
+        quantity = product.quantity + cartitems.count
+        quant = quantity
+      }
+  
+      else {
+        quantity = product.quantity
+      }
+      console.log("llllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
+  
+      stock = dbProduct.stock
+     
+      
+      
+      let productObj = {
+        productId: product.items,
+        quantity: quantity,
+        price: dbProduct.productprice,
+        finalPrice: quantity * dbProduct.productprice
+  
+  
+      }
+      let ID=productObj.productId
+     console.log("productIIIDDDDDDDD",ID);
+     console.log(stock);
+     console.log(quant);
+     req.session.quant= parseInt(quant)
+     req.session.productId=ID
+      productObjs.push(productObj)
+      
+    }
+    if (quant <= stock) {
+      carterr = null
+    } else {
+      carterr = "OUT OF STOCK"
+    }
+  
+    res.json(
+      {
+        status: true,
+        products: productObjs,
+        stock: carterr
+      }
+    )
+    
+    console.log("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+  
+  } catch (error) {
+    console.log(error);
+    next()
+  }
+ 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const updatequantity = async function (req, res, next) {
+
+  try {
+    User = req.session.user
+    cartItem = req.body
+    cartItem.count = parseInt(cartItem.count)
+
+    for (i = 0; i < productCart.length; i++) {
+      if (productCart[i]['item'] == cartItem.product) {
+        productCart[i]['quantity'] = productCart[i]['quantity'] + cartItem.count
+      }
+    }
+
+    const cartQauntity = await cartinfo.findOneAndUpdate({ $and: [{ User: User }, { 'Product.item': new ObjectId(cartItem.product) }] },
+      { $inc: { 'Product.$.quantity': cartItem.count } }).lean();
+    let cartElements = []
+    
+    for (i = 0; i < cartQauntity.Product.length; i++) {
+      let cart = cartQauntity.Product[i]
+      const productData = await productinfo.findOne({ _id: new ObjectId(cart.item) })
+      let quantity
+      if (cart.item.toString() == cartItem.product) {
+        quantity = cart.quantity + cartItem.count
+      }
+      else {
+        quantity = cart.quantity
+      }
+      let cartObj = {
+        product: cart.item,
+        quantity: quantity,
+        price: productData.price,
+        finalPrice: quantity * productData.price
+      }
+      cartElements.push(cartObj)
+    }
+
+
+    res.json({
+      status: true,
+      cartElements: cartElements,
+
+    })
+
+  } catch (error) {
+
+    console.log(error.message)
+
+  }
+}
+
+
+
+
+
+
+
+
+const updatequantity = async function (req, res, next) {
+
+  try {
+    User = req.session.user
+    cartItem = req.body
+    cartItem.count = parseInt(cartItem.count)
+
+    for (i = 0; i < productCart.length; i++) {
+      if (productCart[i]['item'] == cartItem.product) {
+        productCart[i]['quantity'] = productCart[i]['quantity'] + cartItem.count
+      }
+    }
+
+    const cartQauntity = await cartinfo.findOneAndUpdate({ $and: [{ User: User }, { 'Product.item': new ObjectId(cartItem.product) }] },
+      { $inc: { 'Product.$.quantity': cartItem.count } }).lean();
+    let cartElements = []
+    
+    for (i = 0; i < cartQauntity.Product.length; i++) {
+      let cart = cartQauntity.Product[i]
+      const productData = await productinfo.findOne({ _id: new ObjectId(cart.item) })
+      let quantity
+      if (cart.item.toString() == cartItem.product) {
+        quantity = cart.quantity + cartItem.count
+      }
+      else {
+        quantity = cart.quantity
+      }
+      let cartObj = {
+        product: cart.item,
+        quantity: quantity,
+        price: productData.price,
+        finalPrice: quantity * productData.price
+      }
+      cartElements.push(cartObj)
+    }
+
+
+    res.json({
+      status: true,
+      cartElements: cartElements,
+
+    })
+
+  } catch (error) {
+
+    console.log(error.message)
+
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+{{!-- order list------------------ --}}
+
+const adminGetOrderDetails = async function (req, res, next) {
+    try {
+        let stat
+        if (orderid == null) {
+    
+        } else {
+            let orderstatus = await userorder.findOne({ _id: new ObjectId(orderid) })
+            console.log(orderstatus);
+             stat = orderstatus.status
+            console.log(stat);
+            console.log("ssssssssssss");
+        }
+        let dataorder = await userorder.aggregate([{ $match: { _id: new ObjectId(orderid) } }, { $unwind: "$product" }, { $project: { product: '$product.products', paymentid: '$product.products.paymentid' } }])
+        console.log("kkkkkkkkkkkkkkkkk");
+        console.log(dataorder);
+        
+        if (stat == 'delivered'||stat=='Item Returned') {
+            orderid = null
+            console.log(stat);
+        }
+        res.render('admin-orderdetails', { dataorder, orderid, stat })
+    } catch (error) {
+        console.log(error)  
+        next()   
+    }
+   
+}
+
+
+
+
+{{!-- ------------------------------------- --}}
+
+const orderPage=async function(req,res){
+    let orderdetails=await orderinfo.find()
+    res.render('OrderList',{orderdetails})
+  }
+
+
+
+{{!-- ------------orderdetails with aggregate--------------- --}}
+
+  
+
+  const orderProducts = async function(req, res) {
+    try {
+      let orderId = req.params.id
+      console.log(orderId);
+      console.log("javaddalipppppppppppppppppppppppppppppppppp");
+      let orderstatus = await orderinfo.findOne({_id: new ObjectId(orderId)})
+      let productCart = await orderinfo.aggregate([
+        {$match: {_id:new ObjectId(orderId)}},
+        {$unwind: "$products"},
+        {$project: {item: "$products.item", quantity: "$products.quantity"}},
+        {$lookup: {from: "productdatas", localField: "item", foreignField: "_id", as: "products"}},
+        {$project: {item: 1, quantity: 1, Product: {$arrayElemAt: ["$products", 0]}}}
+      ])
+
+
+
+      res.render("orderedProducts", {productCart,orderstatus, orderId})
+      console.log(productCart);
+    
+    } catch (err) {
+      console.error(err)
+      // res.status(500).send("Server error")
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const orderProducts = async function(req, res) {
+    try {
+      let stat
+
+      if(orderId==null){
+        console.log(orderId);
+
+
+      }else{
+        let orderId = req.params.id
+     
+        console.log("javaddalipppppppppppppppppppppppppppppppppp");
+        let orderstatus = await orderinfo.findOne({_id: new ObjectId(orderId)})
+        stat=orderstatus.status
+        
+      }
+
+      let productCart = await orderinfo.aggregate([
+        {$match: {_id:new ObjectId(orderId)}},
+        {$unwind: "$products"},
+        {$project: {item: "$products.item", quantity: "$products.quantity"}},
+        {$lookup: {from: "productdatas", localField: "item", foreignField: "_id", as: "products"}},
+        {$project: {item: 1, quantity: 1, Product: {$arrayElemAt: ["$products", 0]}}}
+      ])
+
+      if(stat=='deliverd'||stat=='item returned'){
+        orderId=null
+
+      }
+
+      res.render("orderedProducts", {productCart,orderstatus, orderId})
+      // console.log(productCart);
+    
+    } catch (err) {
+      console.error(err)
+    
+  }
+}
+
+
+
+
+{{!-- admin dashboard--------------- --}}
+
+
+
+const adminDashBord = async function (req, res, next) {
+    try {
+        let totalrevenue
+        let admin = req.session.admin
+        
+            let usercount = await userdata.find().count()
+            let blockeduser= await userdata.find({status:false}).count()
+            console.log(blockeduser);
+            let ordercount = await userorder.findOne({ status: "delivered" }).count()
+            let revenue = await userorder.aggregate([{ $match: { status: "delivered" } }, { $unwind: "$product" }, { $group: { _id: null, sum: { $sum: "$product.totalprice" } } }, { $project: { _id: 0 } }])
+            console.log(revenue);
+            if (revenue.length != 0) {
+                totalrevenue = revenue[0].sum
+            } else {
+                totalrevenue = 0
+            }
+            console.log("rrrrrrrrrrrrrrrrrrrrrrr");
+            console.log(ordercount);
+            console.log(usercount);
+            let pendingordercount = await userorder.findOne({ status: "Pending" }).count()
+            console.log(pendingordercount);
+            res.render('admin-dashbord', { usercount, ordercount, totalrevenue, pendingordercount ,blockeduser})  
+    } 
+}
+
+
+
+
+{{!-- 
+banneradd----------------- --}}
+
+const bannerDetails=async function(req,res){
+  const Bannerimg=req.files.bannerimage
+  Bannerimg.mv('./public/bannerimages'+Bannerimg.name+".jpg")
+  let bannerdetails={
+    title:req.body.title,
+    subtitle:req.body.subtitle,
+    bannerimage:Bannerimg.name+".jpg",
+    Status:true
+
+  }
+  await bannerinfo.insertMany([bannerdetails])
+  res.redirect("/banner")
+}

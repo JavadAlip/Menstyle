@@ -1,0 +1,73 @@
+<td class="cart__quantity">
+    <div class="quantity" style="margin-left: -1rem">
+        <div class="value-button" id="decrease" onclick="decreaseValue(),updatequantity('{{products.productid}}',-1)"
+            value="Decrease Value">-</div>
+        <input type="number" id="number" value="{{quantity}}" />
+        {{!-- <span type="number" id="number" value="{{quantity}}">{{quantity}}</span> --}}
+        <div class="value-button" id="increase" onclick="increaseValue(),updatequantity('{{products.productid}}',1)"
+            value="Increase Value">+</div>
+    </div>
+</td>
+
+
+
+
+<script>
+    function increaseValue() {
+        var value = parseInt(document.getElementById('number').value, 10);
+        value = isNaN(value) ? 0 : value;
+        value++;
+        document.getElementById('number').value = value;
+    }
+
+    function decreaseValue() {
+        var value = parseInt(document.getElementById('number').value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+
+        value--;
+        if (value == 0) {
+            value.remove()
+        }
+        document.getElementById('number').value = value;
+    }
+</script>
+
+
+
+<script>
+    function updatequantity(productId, count) {
+
+        $.ajax({
+            url: '/update-quantity',
+            data: {
+                product: productId,
+                count: count
+
+            },
+            method: 'post',
+            success: (response) => {
+                location.href = "/user-shopcart"
+            }
+        })
+    }
+</script>
+
+
+
+{{!--
+<div class="quantity">
+    <div class=class="value-button" id="decrease"
+        onclick="decreaseValue ('{{Product._id}}'),updatequantity('{{Product._id}}',-1)" value="Decrease Value"> <button
+            style="border-color: rgb(44, 32, 52);">-</button>
+    </div>
+
+    <input style="width: 2rem;" type="tel" id="quantity-number-{{Product._id}}" value="{{quantity}}">
+
+    <div class="btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" id="increase"
+        onclick="increaseValue ('{{product._id}}'),updatequantity('{{Product._id}}',1)" value="Increase Value"> <button
+            style="border-color: antiquewhite;">+</button></div>
+
+
+    <i class="fs-16 zmdi zmdi-plus"></i>
+</div> --}}

@@ -1,0 +1,59 @@
+<div class="form control d-flex justify-content-center align-items-center flex-column">
+  <h1>Edit Product</h1>
+  <div style="width: 30rem; height: 50rem;">
+    <form action="/product/productList/{{edit._id}}" method="post" enctype="multipart/form-data" name="submission"   onsubmit="return addeditpost()" oninput="clearform()">
+   
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="productname" name="productname" placeholder="product name"
+          value="{{edit.productname}}">
+        <label for="floatingInput">Product Name</label>
+      </div>
+      <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="brand" name="brand" placeholder="brand" value="{{edit.brand}}">
+        <label for="floatingInput">Brand</label>
+      </div>
+      <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="price" name="price" placeholder="price" value="{{edit.price}}">
+        <label for="floatingInput">Price</label>
+      </div>
+      <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="stock" name="stock" placeholder="stock" value="{{edit.stock}}">
+        <label for="floatingInput">Stock</label>
+      </div>
+      <p class="text-danger  text-center"></p>
+
+      <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="discription" name="discription" placeholder="Description"
+          value="{{edit.discription}}">
+        <label for="floatingPassword">Description</label>
+      </div>
+      <p class="text-danger  text-center"></p>
+
+
+      <div class="form-floating">
+
+      </div>
+      <img src="/productimages/{{[]}}" style="width: 50px; line-height: 50px;" alt="" id="productimage">
+      <input type="file" multiple class="custom-file-input" name="Productimage" placeholder="Image" value="{{productimage}}"
+        onchange="viewImage(event)" required>
+
+      <div class="pt-5 mb-4 ">
+        <button class="btn btn-dark btn-lg btn-block" type="submit">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script src="/public/javascripts/addeditpost.js"></script>
+
+<script>
+  function viewImage(event) {
+    document.getElementById('productimage').src = URL.createObjectURL(event.target.files[0])
+
+  }
+</script>

@@ -1,0 +1,65 @@
+<table id="table_id" class="display">
+  {{!-- <a href="/admin/adminCreate"><button type="button" class="btn btn-primary">Create</button></a> --}}
+  <a href="/OrderList" class="btn btn-dark" role="button">ORDER LIST</a>
+  <thead>
+    <tr>
+      <th>Product Image</th>
+      <th>Product Name</th>
+      <th>Brand</th>
+      <th>Price</th>
+
+
+      <th>
+           {{#if orderId}}
+             <div class="dropdown">
+          <a href="#" class="btn btn-primary btn-sm dropdown-toggle" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+           change Status
+          </a>
+
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/cancel/{{orderId}}">Cancel</a></li>
+            <li><a class="dropdown-item" href="/pending/{{orderId}}">Pending</a></li>
+            <li><a class="dropdown-item" href="/delivered/{{orderId}}">Delivered</a></li>
+            <li><a class="dropdown-item" href="/confirm/{{orderId}}">Confirm</a></li>
+          </ul>
+        </div>
+           {{else}}
+      status
+        {{/if}}
+      </th>
+
+    </tr>
+  </thead>
+  <tbody>
+
+    {{#each productCart}}
+    <tr>
+
+
+      <td><img style="width: 50px; height: 50px;" src="/productimages/{{Product.Productimage.[0]}}" alt=""></td>
+      <td>{{Product.productname}}</td>
+      <td>{{Product.brand}}</td>
+      <td>{{Product.price}}</td>
+      
+      <td>{{product.orderStatus}}</td>
+    </tr>
+    {{/each}}
+
+  </tbody>
+</table>
+
+
+
+
+<script>
+  $(document).ready(function () {
+    $('#table_id').DataTable();
+  });
+</script>
+
+<style>
+  body {
+    padding: 3%;
+  }
+</style>

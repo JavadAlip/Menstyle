@@ -1,0 +1,33 @@
+
+<div class="row">
+{{#each addresspass}}
+    <div onclick="window.location.href='/select/address/{{index}}'" class="cart p-5" style="width: 18rem;">
+  <div class="card-header">
+    Adderss Details
+  </div>
+    <form  method="post"  name="submission" oninput="clearform()">
+
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">Fullname: {{Firstname}}</li>
+    <li class="list-group-item">lastname: {{Lastname}}</li>
+    <li class="list-group-item">Email: {{Email}}</li>
+	<li class="list-group-item">Mobilnumber: {{Mobilenumber}}</li>
+  <label  class="list-group-item">Address: {{Address}}</label>
+	{{!-- <li class="list-group-item">Address: {{Adderss}}</li> --}}
+	<li class="list-group-item">Pincode: {{Postcode}}</li>
+	<li class="list-group-item">State: {{State}}</li>
+	<li class="list-group-item">City: {{City}}</li>
+	
+  <div class="pt-5 mb-4 ">
+       <a href="/savedAddress/{{@index}}"  class="btn btn-dark btn-lg btn-block" type="submit">SELECT</a>
+      </div>
+	
+  </ul>
+  </form>
+</div>
+{{/each}}
+	</div>
+
+
+
+

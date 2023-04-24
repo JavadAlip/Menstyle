@@ -1,0 +1,61 @@
+<section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+
+                        <div class="mb-md-5 mt-md-4 pb-5">
+
+                            <form class="mb-md-5 mt-md-4 pb-5" onsubmit="return " oninput="clearform()"
+                                action="/frgtPasschange" method="post" name="submission" id="submission">
+
+                                <h2 class="fw-bold mb-2 text-uppercase">CHANGE PASSWORD</h2>
+
+
+
+                                {{!-- <div class="form-outline form-white mb-4">
+                                    <input type="Password" name="Password" id="Password"
+                                        class="form-control form-control-lg" />
+                                    <label class="form-label">Current Password</label>
+                                </div> --}}
+                                {{!-- <p class="text-danger "></p> --}}
+
+                                <div class="form-outline form-white mb-4">
+                                    <input type="Password" name="newPassword" id="newPassword"
+                                        class="form-control form-control-lg" />
+                                    <label class="form-label">New Password</label>
+                                </div>
+                                {{!--
+
+                                <div class="form-outline form-white mb-4">
+                                    <input type="password" name="Confirmpassword" id="Confirmpassword"
+                                        class="form-control form-control-lg" />
+                                    <label class="form-label" for="typePasswordX">Confirm Password</label>
+                                </div>
+                                <p class="text-danger"></p> --}}
+                                {{!--
+                                <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a>
+                                </p> --}}
+
+                                {{!-- {{#if passerrmsg}}
+                                <div class="alert alert-danger" role="alert">
+                                    <p>{{passerrmsg}}</p>
+                                </div>
+                                {{/if}} --}}
+
+                                {{!-- <p>{{passerrmsg}}</p> --}}
+                                <button class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+
+
+
+                        </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

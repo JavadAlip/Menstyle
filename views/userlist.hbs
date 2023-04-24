@@ -1,0 +1,67 @@
+{{!-- <table id="table_id" class="display">
+  {{!-- <a href="/admin/adminCreate"><button type="button" class="btn btn-primary">Create</button></a> --}}
+  <a href="adminhome" class="btn btn-secondary" role="button">DASH BOARD</a>
+    
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Mobilenumber</th>
+            <th>Status</th>
+            <th>Action</th>
+            <th>Delete</th>
+        </tr>
+         </thead>
+         <tbody>
+        {{#each finduser }}
+    <tr>
+      <td>
+        <div class="d-flex align-items-center">
+          <div class="ms-3">
+            <p class="fw-bold mb-1">{{Username}}</p>
+            
+          </div>
+        </div>
+      </td>
+      <td>
+        <p class="text-muted mb-0">{{Email}}</p>
+      </td>
+      
+       <td>
+        <p class="text-muted mb-0">{{ Mobilenumber}}</p>
+      </td>
+
+      <td>
+           <p class="text-muted mb-0">{{Status}}</p>
+      </td>
+   
+
+      {{#if Status}}
+        <td>
+            <a href="/Block/{{_id}}" class="btn btn-danger">BLOCK</a>
+        </td>
+        {{else}}
+        <td>
+            <a href="/Unblock/{{_id}}"><button class="btn btn-success">UNBLOCK</button></a>
+        </td>
+        {{/if}}
+
+        <td>
+            <a href="/deleteOne/{{_id}}" class="btn btn-primary"  onclick="return confirm('Are you want to delete {{Username}}?')">DELETE</a>
+        </td>
+        {{/each}}
+    </tr>
+    </tbody>
+</table>
+
+<script>
+  $(document).ready( function () {
+    $('#table_id').DataTable();
+} );
+</script>
+
+<style>
+  body{
+    padding: 3%;
+  }
+</style> --}}
