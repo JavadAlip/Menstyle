@@ -2,8 +2,7 @@ const session = require('express-session');
 const { status } = require('express/lib/response');
 const async = require('hbs/lib/async');
 const { ObjectId } = require('mongodb');
-
-
+require('dotenv').config()
 // const { uuid } = require('uuidv4');
 const { v4: uuidv4 } = require('uuid');
 const Razorpay = require('razorpay');
@@ -23,8 +22,8 @@ const coupeninfo = require('../model/coupenmodel').collection8
 const bannerinfo = require('../model/bannermodel').collection9
 const wishlistinfo = require('../model/wishlistModel').collection10
 var instance = new Razorpay({
-  key_id: 'rzp_test_PpPTFLpvytFBKW',
-  key_secret: 'n4N2aF5nVkzQNOdfbDGOYxYg',
+  key_id: process.env.key_id,
+  key_secret: process.env.key_secret,
 });
 
 let msg;
@@ -732,7 +731,7 @@ const usergetverifypayment = async function (req, res, next) {
     let raz = req.body
     console.log(raz);
     const crypto = require('crypto');
-    let hmac = crypto.createHmac('sha256', 'n4N2aF5nVkzQNOdfbDGOYxYg')
+    let hmac = crypto.createHmac('sha256', key_secret)
     hmac.update(raz['payment[razorpay_order_id]'] + '|' + raz['payment[razorpay_payment_id]']);
     hmac = hmac.digest('hex')
     if (hmac == raz['payment[razorpay_signature']) {
