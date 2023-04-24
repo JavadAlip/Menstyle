@@ -73,7 +73,7 @@ router.post('/verifyOtpp',userget.verifyotppp)
 router.post('/frgtPasschange',userget.changefrgtPass)
 
 router.get('/wishListPost/:id',userget.wishListPost)
-router.post('/',userget.searchhh)
+
 
 
 

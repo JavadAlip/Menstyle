@@ -1346,31 +1346,31 @@ const wishListPost = async function (req, res, next) {
 
   // homepage serach product----------
   
-const searchhh = async function (req, res, next) {
+// const searchhh = async function (req, res, next) {
 
-  try {
+//   try {
     
 
   
-    const searchValue = req.body.searchProductt
+//     const searchValue = req.body.searchProductt
 
-    console.log("jaabgducbdibsfff", searchValue);
-    const searchProductt = searchValue.trim()
-    console.log(searchProductt);
+//     console.log("jaabgducbdibsfff", searchValue);
+//     const searchProductt = searchValue.trim()
+//     console.log(searchProductt);
 
 
-    if (searchProductt != '') {
-      // let pass = await productinfo.find({ $and: [{ productname: { $regex: `^${searchProduct}`, $options: 'i' } }, { is_admin: 0 }] });
-      let pass=await productinfo.find({productname:{$regex:new RegExp('^'+searchValue+',*','i')}}).exec();
-      console.log("javadpppppppppppppppppppp", searchProductt);
-      console.log("aliii", pass);
+//     if (searchProductt != '') {
+//       // let pass = await productinfo.find({ $and: [{ productname: { $regex: `^${searchProduct}`, $options: 'i' } }, { is_admin: 0 }] });
+//       let pass=await productinfo.find({productname:{$regex:new RegExp('^'+searchValue+',*','i')}}).exec();
+//       console.log("javadpppppppppppppppppppp", searchProductt);
+//       console.log("aliii", pass);
 
-      res.render('homePage',{pass})
-    }
-  } catch (error) {
-    console.log(error);
-  }
-}
+//       res.render('homePage',{pass})
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 
 
@@ -1393,6 +1393,6 @@ module.exports = {
   userOrder, otpLogin, otpVerification, verifyotpp, orderDelete,
   UserTryCoupen, viewProducts, selectCategory, allProducts, searchh,
   otppVerification, verifyotppp, frgtPasschange, changefrgtPass,Conatct
-  ,wishList,wishListPost,deleteWish,about,searchhh}
+  ,wishList,wishListPost,deleteWish,about}
 
 
