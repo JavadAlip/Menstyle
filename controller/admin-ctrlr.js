@@ -1,6 +1,5 @@
 const async = require('hbs/lib/async')
 const { ObjectId } = require('mongodb')
-
 const admininfo = require('../model/adminmodel').collection1
 var userinfo = require('../model/usermodel').collection
 const productinfo = require('../model/productmodel').collection3
@@ -9,14 +8,9 @@ const orderinfo = require('../model/orderModel').collection7
 const cartinfo = require('../model/cartmodel').collection5
 const coupeninfo = require('../model/coupenmodel').collection8
 const bannerinfo = require('../model/bannermodel').collection9
-
-
 let msg;
 let orderId;
 let orderstatus; 
-
-
-
 const adminLogin=function(req,res,next){
   if(req.session.admin){
     res.redirect('/adminhome')
@@ -24,7 +18,6 @@ const adminLogin=function(req,res,next){
     res.render("adminlogin")
   }
   }
-
 
   // adminvalidation---------
   const adminloginvalidation=async function(req,res,next){
@@ -34,10 +27,8 @@ const adminLogin=function(req,res,next){
      }
      let adminvalidate=await admininfo.findOne({Username:adminvalidation.Username})
      console.log(adminvalidate);
-     if(adminvalidate==null){
- 
+     if(adminvalidate==null){ 
        res.redirect('/adminlogin')
-       
      }else{
        console.log(adminvalidate);
        if(adminvalidation.Password==adminvalidate.Password)
@@ -46,71 +37,46 @@ const adminLogin=function(req,res,next){
      }
    }
 
-
- 
-
 // productlist-----------
   const productlist= async function(req,res,next){
     const table= await productinfo.find({})
     res.render("productList1",{table})
   }
-
   const editproduct=function(req,res,next){
     res.render("editProduct")
   }
-
   const deleteproduct= async function(req,res,next){
     const productdelete=req.params.id
     await productinfo.deleteOne({_id:productdelete})
     res.redirect("/productList")
-  }
-  
-  
- 
-
-
+  }  
   // user list----------
   const userlist=async function(req,res,next){
     const finduser=await userinfo.find()
     res.render("userlist1",{finduser})
   }
-
-
-
   const Block=async function(req,res,next){
     const blockstatus=req.params.id
     await userinfo.updateOne({_id:blockstatus},{$set:{Status:false}})
     res.redirect("/userlist")
   }
-
   const Unblock=async function(req,res,next){
    const Unblockstatus=req.params.id
     await userinfo.updateOne({_id:Unblockstatus},{$set:{Status:true}})
     res.redirect("/userlist")
   }
-
-
-
-
   const deleteOne=async function(req,res,next){
    const Userdelete=req.params.id
     await userinfo.deleteOne({_id:Userdelete})
     res.redirect("/userlist")
   }
-
-
-
   // category--------
-
   const CategoryProduct1= async function(req,res,next){
     const findCategory=await categoryinfo.find({})
     console.log(findCategory);
     res.render('Category1',{findCategory,msg})
     msg=null
   }
-
-
-
   const categoryPost = async function (req, res, next) {
     let details={   
       category:req.body.category
@@ -118,39 +84,28 @@ const adminLogin=function(req,res,next){
     if(details.category==""){
       res.redirect('/Category')
       findCategory="Category field is empty"
-
     }else{
       let checkCategory = await categoryinfo.findOne({category:details.category})
       if(checkCategory==null){
         await categoryinfo.insertMany([details])
         res.redirect("/Category")
-
       }else{
         res.redirect('/Category')
         msg="This category already exist"
       }
     }
-    
-   
   }
-  
-
-  
   const categoryDelete=async function(req,res,next){
     const categorydelete=req.params.id
      await categoryinfo.deleteOne({_id:categorydelete})
      res.redirect("/Category")
    }
-   
-
   const EditCategory= async function(req,res,next){
     const editcategory=req.params.id
     const editcategorydata=await categoryinfo.findOne({_id:editcategory})
     console.log(editcategorydata);
     res.render("editCategory",{editcategorydata})
   }
-
-
   const editCategoryLast=async function(req,res){
     console.log(req.body);
     let id=req.params.id
@@ -158,18 +113,10 @@ const adminLogin=function(req,res,next){
     category:req.body.category
     }})
     res.redirect('/category')
-
-  }
-
-
-    
+  } 
   const CategoryProduct= async function(req,res,next){
     res.redirect('/Category')
   }
-
-
-  
-
   // order list---------------------
 
   // const orderList =async function(req, res, next) {
@@ -223,16 +170,11 @@ const adminLogin=function(req,res,next){
 //     next()   
 // }
 // }
-
-
   const orderPage=async function(req,res){
     let orderdetails=await orderinfo.find()
     console.log("tttttttttttttttttttttttttttttttt",orderdetails);
     res.render('OrderList',{orderdetails})
   }
-  
-
-
   const orderProducts = async function(req, res) {
     try {
       let orderId = req.params.id
@@ -246,28 +188,18 @@ const adminLogin=function(req,res,next){
         {$lookup: {from: "productdatas", localField: "item", foreignField: "_id", as: "products"}},
         {$project: {item: 1, quantity: 1, Product: {$arrayElemAt: ["$products", 0]}}}
       ])
-
-
-
       res.render("orderedProducts", {productCart,orderstatus, orderId})
       console.log(productCart);
-    
     } catch (err) {
       console.error(err)
       // res.status(500).send("Server error")
     }
   }
-
-
-
   // ----------coupen management-----------
   const coupenAdmin= async function(req,res,next){
     let findCoupen=await coupeninfo.find()
     res.render('coupenAdmin',{findCoupen})
   }
-
-
-
   const Block1=async function(req,res,next){
     const blockCoupen=req.params.id
     await coupeninfo.updateOne({_id:blockCoupen},{$set:{status:false}})
@@ -279,8 +211,6 @@ const adminLogin=function(req,res,next){
     res.redirect('/coupenAdmin')
     
   }
-
-
   const coupenPost =async function(req,res,next){
     console.log(req.body);
     let coupen=req.body
@@ -288,10 +218,6 @@ const adminLogin=function(req,res,next){
     await coupeninfo.insertMany([coupen])
     res.redirect('/coupenAdmin')
   }
-
-
-
-
   // const coupenPost = async function (req, res, next) {
   //   let details={   
   //     coupen:req.body.coupen
@@ -300,13 +226,7 @@ const adminLogin=function(req,res,next){
   //   await coupeninfo.insertMany([details])
   //   res.redirect("/coupenAdmin")
   // }
- 
-
-
-
   // order status------------------------
-
-
 // cancel-----------
   const adminCancelOrder=async function(req,res,next){
     try{
@@ -321,9 +241,6 @@ const adminLogin=function(req,res,next){
       next()
     }
   }
-
-
-
 
 // pending----------
   const adminPendingOrder=async function(req,res,next){
@@ -373,11 +290,7 @@ const adminConfirmOrder=async function(req,res,next){
     next()
   }
 } 
-
-
 // sales-report------------------------------
-
-
 const adminGetSalesReport=async function(req,res,next){
   try{
     console.log("jaaaaaaaaaaaaaaaaaaaaaaaa");
@@ -386,7 +299,6 @@ const adminGetSalesReport=async function(req,res,next){
     {$project:{item:"$products.item",quantity:"$products.quantity",orderdUser:"$orderdUser",date:"$date",paymentmethod:"$paymentmethod",grandTotal:"$grandTotal"}},
     // {$lookup: {from: "productdatas", localField: "item", foreignField: "_id", as: "products"}},
     // {$project: {item: 1, quantity: 1, Product: {$arrayElemAt: ["$products", 0]}}}
- 
   ])
   res.render("salesReport",{salesdatas})
   }
@@ -396,18 +308,10 @@ const adminGetSalesReport=async function(req,res,next){
   }
  
 }
-
-
 // const adminGetSalesReport=async function (req,res,next){
 //   let salesdatas=await orderinfo.find()
 //   res.render("salesReport",{salesdatas})
 // }
-
-
-
-
-
-
 // admin-dashboard---------------
 const adminDashBoard= async function(req,res,next){
   try{
@@ -425,33 +329,22 @@ const adminDashBoard= async function(req,res,next){
     }else{
       totalrevenue=0
     }
-    let pendingordercount=await orderinfo.findOne({orderStatus:"Pending"}).count()
-    
+    let pendingordercount=await orderinfo.findOne({orderStatus:"Pending"}).count() 
   res.render("adminhome",{usercount,ordercout,totalrevenue,pendingordercount,blockeduser})
-    
   }
   catch (error) {
     console.log(error)  
     next()
 }
 }
-
-
 // ---------------banner-------------
-
-
-
 const bannerlist=async function (req,res,next){
   const table=await bannerinfo.find({})
   res.render("banner",{table})
 }
-
 const addbannerget=async function (req,res,next){
   res.render('addbanner')
-
 }
-
-
 const bannerDetails=async function (req,res){
   const bannerproduct=new bannerinfo({
     title:req.body.title,
@@ -459,21 +352,17 @@ const bannerDetails=async function (req,res){
     bannerimage:req.file.filename,
   })
   try{
-
     await bannerproduct.save()
     res.redirect('/banner')
   }catch{
     res.render('addbanner')
   }
 }
-
 const deleteBanner=async function(req,res,next){
   const bannerdelete=req.params.id
   await bannerinfo.deleteOne({_id:bannerdelete})
   res.redirect("/banner")
 }
-
-
   module.exports={adminLogin,productlist,
     editproduct,deleteproduct,adminloginvalidation,
     userlist,Block,Unblock,deleteOne,CategoryProduct,
